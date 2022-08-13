@@ -75,16 +75,20 @@ class CustomLintRunner {
         _analyzerPluginProtocolVersion,
       ),
     );
-    await channel.sendRequest(
-      AnalysisSetContextRootsParams([
-        for (final contextRoot in _contextRoots)
-          ContextRoot(
-            contextRoot.root.path,
-            contextRoot.excludedPaths.toList(),
-            optionsFile: contextRoot.optionsFile?.path,
-          ),
-      ]),
-    );
+
+    final mappedRoots = _contextRoots.map((contextRoot) {
+      return ContextRoot(
+        contextRoot.root.path,
+        contextRoot.root
+            .getChildren()
+            .where((element) =>
+                !element.path.endsWith('test') && !element.path.endsWith('lib'))
+            .map((e) => e.path)
+            .toList(),
+        optionsFile: contextRoot.optionsFile?.path,
+      );
+    }).toList();
+    await channel.sendRequest(AnalysisSetContextRootsParams(mappedRoots));
   }
 
   /// Obtains the list of lints for the current workspace.
