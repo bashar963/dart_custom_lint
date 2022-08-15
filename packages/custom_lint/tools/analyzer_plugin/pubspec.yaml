@@ -1,9 +1,13 @@
 name: custom_lint_analyzer_plugin_loader
 description: This pubspec determines the version of the analyzer plugin to load.
-version: 0.0.9
+version: 0.0.9+2
 
 environment:
   sdk: ">=2.14.0 <3.0.0"
 
 dependencies:
-  custom_lint: 0.0.9
+  custom_lint:
+    git:
+      url: https://github.com/andrzejchm/dart_custom_lint.git
+      path: packages/custom_lint
+      ref: main
